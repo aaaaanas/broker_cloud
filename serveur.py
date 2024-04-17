@@ -6,6 +6,9 @@ from flask import Flask, request, abort
 import logging
 import psutil
 import os
+import os.path
+
+import traceback
 
 BROKER_HOST = "192.168.97.45"
 BROKER_PORT = 8000
@@ -16,6 +19,20 @@ API_PORT = 8000
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), "Downloads", "a.conf")
 print(f"Configuration file path: {CONFIG_FILE}")
 
+
+config_file_path = os.path.join(os.path.expanduser("~"), "Downloads", "a.conf")
+if not os.path.isfile(config_file_path):
+    logging.error(f"Le fichier de configuration {config_file_path} n'existe pas.")
+    abort(500)
+
+logging.debug(f"Chemin d'accès complet du fichier de configuration : {config_file_path}")
+
+try:
+    with open(config_file_path, 'r') as f:
+        pass
+except FileNotFoundError:
+    logging.error(f"Le fichier de configuration {config_file_path} n'existe pas.")
+    abort(500)
 
 
 def is_mosquitto_running():
@@ -88,7 +105,11 @@ def internal_server_error(e):
     logging.error(f"Erreur 500: {e}")
     return "Une erreur interne est survenue", 500
 
-
+@app.errorhandler(500)
+def internal_server_error(e):
+    logging.error(f"Erreur 500: {e}")
+    logging.error(traceback.format_exc())
+    return "Une erreur interne est survenue", 500
 
 
 
