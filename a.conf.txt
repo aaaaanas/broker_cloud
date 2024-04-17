@@ -1,0 +1,16 @@
+# Example Mosquitto Configuration
+
+# Network Settings
+listener 1883
+protocol mqtt
+
+# Authentication Settings
+allow_anonymous true
+
+# Logging Settings
+
+
+
+# Persistence Settings
+persistence true
+persistence_location C:\Users\UF187ATA\Downloads\mosquitto_data
